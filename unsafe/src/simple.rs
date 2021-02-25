@@ -25,6 +25,7 @@ impl<T> List<T> {
         List { head: None, tail: None }
     }
 
+    #[inline(never)]
     pub fn push_front(&mut self, elem: T) {
         let mut node = Box::new(Node::new(elem));
         unsafe {
@@ -41,6 +42,7 @@ impl<T> List<T> {
         }
     }
 
+    #[inline(never)]
     pub fn push_back(&mut self, elem: T) {
         let mut node = Box::new(Node::new(elem));
         unsafe {
@@ -57,6 +59,7 @@ impl<T> List<T> {
         }
     }
 
+    #[inline(never)]
     pub fn pop_back(&mut self) -> Option<T> {
         self.tail.map(|node| unsafe {
             let node = Box::from_raw(node.as_ptr());
@@ -71,6 +74,7 @@ impl<T> List<T> {
         })
     }
 
+    #[inline(never)]
     pub fn pop_front(&mut self) -> Option<T> {
         self.head.map(|node| unsafe {
             let node = Box::from_raw(node.as_ptr());
@@ -85,24 +89,28 @@ impl<T> List<T> {
         })
     }
 
+    #[inline(never)]
     pub fn peek_front(&self) -> Option<&T> {
         unsafe { self.head.as_ref().map(|node| {
             &node.as_ref().elem
         })}
     }
 
+    #[inline(never)]
     pub fn peek_back(&self) -> Option<&T> {
         unsafe { self.tail.as_ref().map(|node| {
             &node.as_ref().elem
         })}
     }
 
+    #[inline(never)]
     pub fn peek_back_mut(&mut self) -> Option<&mut T> {
         unsafe { self.tail.as_mut().map(|node| {
             &mut node.as_mut().elem
         })}
     }
 
+    #[inline(never)]
     pub fn peek_front_mut(&mut self) -> Option<&mut T> {
         unsafe { self.head.as_mut().map(|node| {
             &mut node.as_mut().elem

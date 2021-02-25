@@ -35,6 +35,7 @@ impl<T> List<T> {
         List { head: None, tail: None }
     }
 
+    #[inline(never)]
     pub fn push_front(&mut self, elem: T) {
         let new_head = Node::new(elem);
         match self.head.take() {
@@ -50,6 +51,7 @@ impl<T> List<T> {
         }
     }
 
+    #[inline(never)]
     pub fn push_back(&mut self, elem: T) {
         let new_tail = Node::new(elem);
         match self.tail.take() {
@@ -65,6 +67,7 @@ impl<T> List<T> {
         }
     }
 
+    #[inline(never)]
     pub fn pop_back(&mut self) -> Option<T> {
         self.tail.take().map(|old_tail| {
             match old_tail.borrow_mut().prev.take() {
@@ -80,6 +83,7 @@ impl<T> List<T> {
         })
     }
 
+    #[inline(never)]
     pub fn pop_front(&mut self) -> Option<T> {
         self.head.take().map(|old_head| {
             match old_head.borrow_mut().next.take() {
@@ -97,6 +101,7 @@ impl<T> List<T> {
 
     // Want to return a reference while keeping a Ref alive such that 
     // the RefCell keeps the contents of this node alive (I think)
+    #[inline(never)]
     pub fn peek_front(&self) -> Option<Ref<T>> {
         self.head.as_ref().map(|node| {
             // mapping over a Ref? apparently this is monad-like?
@@ -104,18 +109,21 @@ impl<T> List<T> {
         })
     }
 
+    #[inline(never)]
     pub fn peek_back(&self) -> Option<Ref<T>> {
         self.tail.as_ref().map(|node| {
             Ref::map(node.borrow(), |node| &node.elem)
         })
     }
 
+    #[inline(never)]
     pub fn peek_back_mut(&mut self) -> Option<RefMut<T>> {
         self.tail.as_ref().map(|node| {
             RefMut::map(node.borrow_mut(), |node| &mut node.elem)
         })
     }
 
+    #[inline(never)]
     pub fn peek_front_mut(&mut self) -> Option<RefMut<T>> {
         self.head.as_ref().map(|node| {
             RefMut::map(node.borrow_mut(), |node| &mut node.elem)

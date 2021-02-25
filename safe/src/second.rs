@@ -21,11 +21,13 @@ impl<T> List<T> {
         let newnode = Box::new(Node {
             elem: val, 
             next: self.head.take(),
+            // self.head now has a value of None
         });
         self.head = Some(newnode);
     }
 
     pub fn pop(&mut self) -> Option<T> {
+        // self.head now has a value of None
         self.head.take().map(|node| {
             self.head = node.next;
             node.elem
@@ -33,6 +35,8 @@ impl<T> List<T> {
     }
 
     pub fn peek(&self) -> Option<&T> {
+        // as_ref(): takes the thing inside the option as a ref
+        // i.e. Some(thing) -> &thing
         self.head.as_ref().map(|node| {
             &node.elem
         })
@@ -43,6 +47,7 @@ impl<T> List<T> {
 
 impl<T> Drop for List<T> {
     fn drop(&mut self) {
+        // self.head now has a value of None
         let mut curlink = self.head.take();
         while let Some(mut boxed_node) = curlink {
             curlink = boxed_node.next.take();
@@ -67,7 +72,7 @@ impl<T> Iterator for IntoIter<T> {
     }
 }
 
-/* Iter (canonical/observer only) */
+/* Iter */
 
 pub struct Iter<'a, T> {
     next: Option<&'a Node<T>>,

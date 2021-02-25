@@ -30,17 +30,29 @@ impl<T> List<T> {
     // type (if we even do)?
     pub fn append(&self, val: T) -> Self {
         List {
+            // head now points to the new Node we've just 
+            // created, whose next pointer points to the old 
+            // list head
             head: Some(Rc::new(Node {
                 elem: val,
-                next: self.head.clone(),
+                next: self.head.clone(), // explicitly deep copy old head
             }))
         }
     }
     
     pub fn tail(&self) -> Self {
         List {
-            head: self.head.as_ref().and_then(|node| node.next.clone())
+            head: self.head
+                .as_ref()
+                .and_then(|node| { // returns None if as_ref() returns None, 
+                                   // otherwise executes closure with as_ref()s
+                                   // result (i.e. the old head)
+                    node.next.clone() // sets the head of this new list to 
+                                      // point to the old head's next node
+            })
         }
+        // FIXME unsure where the old head's next pointer is unlinked, and 
+        // if the new head's Rc will be +1 b/c of this? 
     }
 
     pub fn head(&self) -> Option<&T> {
@@ -59,6 +71,10 @@ pub struct Iter<'a, T> {
 
 impl<T> List<T> {
     pub fn iter(&self) -> Iter<T> {
+        // "derefs" an option (deref coercion), but very fuzzy on the details; 
+        // Via: https://doc.rust-lang.org/std/ops/trait.Deref.html
+        // "Used for immutable dereferencing operations, like *v"
+        // i.e. Some(&thing) -> thing ???
         Iter { next: self.head.as_deref() }
     }
 }
